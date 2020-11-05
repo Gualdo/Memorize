@@ -14,21 +14,24 @@ struct ContentView: View {
     var body: some View {
         HStack {
             ForEach(viewModel.cards) { card in
-                CardView(card: card)
-                    .onTapGesture {
-                        viewModel.choose(card: card)
-                    }
+                GeometryReader { geometry in // Assignment 1.3
+                    CardView(card: card, height: geometry.size.width * 1.5) // Assignment 1.3
+                        .onTapGesture {
+                            viewModel.choose(card: card)
+                        }
+                }
             }
         }
         .padding()
         .foregroundColor(Color.orange)
-        .font(Font.largeTitle)
+        .font(viewModel.fontType) // Assignment 1.5
     }
 }
 
 struct CardView: View {
     
     var card: MemoryGame<String>.Card
+    var height: CGFloat // Assignment 1.3
     
     var body: some View {
         ZStack {
@@ -43,6 +46,7 @@ struct CardView: View {
                     .fill()
             }
         }
+        .frame(height: height) // Assignment 1.3
     }
 }
 

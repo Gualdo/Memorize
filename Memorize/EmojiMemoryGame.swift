@@ -17,6 +17,10 @@ class EmojiMemoryGame {
         return model.cards
     }
     
+    var fontType: Font { // Assignment 1.5
+        return model.cards.count == 10 ? Font.body : Font.largeTitle
+    }
+    
     // MARK: - Intent(s)
     
     func choose(card: MemoryGame<String>.Card) {
@@ -26,8 +30,9 @@ class EmojiMemoryGame {
     // MARK: - Custom Functions
     
     static func createMemoryGame() -> MemoryGame<String> {
-        let emojis = ["👻","🎃", "🕷"]
-        return MemoryGame<String>(numberOfPairsOfCards: emojis.count) { pairIndex in
+        let emojis = ["👻","🎃", "🕷", "☠️", "🕸"] // Assignment 1.4
+        let randomNumbersOfPairs = Int.random(in: 2..<6) // Assignment 1.4
+        return MemoryGame<String>(numberOfPairsOfCards: randomNumbersOfPairs) { pairIndex in
             return emojis[pairIndex]
         }
     }
