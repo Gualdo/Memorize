@@ -31,36 +31,41 @@ struct CardView: View {
     
     var body: some View {
         GeometryReader { geometry in
-            ZStack {
-                if card.isFaceUp {
-                    RoundedRectangle(cornerRadius: cornerRadius)
-                        .fill(Color.white)
-                    RoundedRectangle(cornerRadius: cornerRadius)
-                        .stroke(lineWidth: edgeLineWidth)
-                    Text(card.content)
-                } else {
-                    if !card.isMatched {
-                        RoundedRectangle(cornerRadius: cornerRadius)
-                            .fill()
-                    }                    
-                }
-            }
-            .font(Font.system(size: fontSize(for: geometry.size)))
+            body(for: geometry.size)
         }
     }
     
     // MARK: - Drawing Constants
     
-    let cornerRadius: CGFloat = 10
-    let edgeLineWidth: CGFloat = 3
+    private let piePadding: CGFloat = 5
     
-    func fontSize(for size: CGSize) -> CGFloat {
-        return min(size.width, size.height) * 0.75
+    private func fontSize(for size: CGSize) -> CGFloat {
+        return min(size.width, size.height) * 0.70
+    }
+    
+    // MARK: - Custom Functions
+    
+    @ViewBuilder
+    private func body(for size: CGSize) -> some View {        
+        if card.isFaceUp || !card.isMatched {
+            ZStack {
+                Pie(startAngle: Angle.degrees(.zero - 90), endAngle: Angle.degrees(110 - 90), clockwise: true)
+                    .padding(piePadding)
+                    .opacity(0.40)
+                Text(card.content)
+                    .font(Font.system(size: fontSize(for: size)))
+            }
+            .cardify(isFaceUp: card.isFaceUp)
+        }
     }
 }
 
+// MARK: - Preview
+
 struct ContentView_Previews: PreviewProvider {
     static var previews: some View {
-        EmojiMemoryGameView(viewModel: EmojiMemoryGame())
+        let game = EmojiMemoryGame()
+        game.choose(card: game.cards[0])
+        return EmojiMemoryGameView(viewModel: game)
     }
 }

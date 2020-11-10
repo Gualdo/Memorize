@@ -9,8 +9,8 @@ import SwiftUI
 
 struct Grid<Item, ItemView>: View where Item: Identifiable, ItemView: View {
     
-    var items: [Item]
-    var viewForItem: (Item) -> ItemView
+    private var items: [Item]
+    private var viewForItem: (Item) -> ItemView
     
     init(_ items: [Item], viewForItem: @escaping (Item) -> ItemView) {
         self.items = items
@@ -19,15 +19,22 @@ struct Grid<Item, ItemView>: View where Item: Identifiable, ItemView: View {
     
     var body: some View {
         GeometryReader { geometry in
-            ForEach(items) { item in
-                Group {
-                    let gridLayout: GridLayout = GridLayout(itemCount: items.count, in: geometry.size)
-                    if let index = items.firstIndex(matching: item) {
-                        viewForItem(item)
-                            .frame(width: gridLayout.itemSize.width, height: gridLayout.itemSize.height)
-                            .position(gridLayout.location(ofItemAt: index))
-                    }
-                }
+            body(for: GridLayout(itemCount: items.count, in: geometry.size))
+        }
+    }
+    
+    private func body(for layout: GridLayout) -> some View {
+        return ForEach(items) {
+            item in self.body(for: item, in: layout)
+        }
+    }
+    
+    private func body(for item: Item, in layout: GridLayout) -> some View {
+        return Group {
+            if let index = items.firstIndex(matching: item) {
+                viewForItem(item)
+                    .frame(width: layout.itemSize.width, height: layout.itemSize.height)
+                    .position(layout.location(ofItemAt: index))
             }
         }
     }

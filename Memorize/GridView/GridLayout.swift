@@ -9,9 +9,21 @@
 import SwiftUI
 
 struct GridLayout {
-    var size: CGSize
-    var rowCount: Int = 0
-    var columnCount: Int = 0
+    
+    private (set) var size: CGSize
+    private (set) var rowCount: Int = 0
+    private (set) var columnCount: Int = 0
+    
+    var itemSize: CGSize {
+        if rowCount == 0 || columnCount == 0 {
+            return CGSize.zero
+        } else {
+            return CGSize(
+                width: size.width / CGFloat(columnCount),
+                height: size.height / CGFloat(rowCount)
+            )
+        }
+    }
     
     init(itemCount: Int, nearAspectRatio desiredAspectRatio: Double = 1, in size: CGSize) {
         self.size = size
@@ -38,17 +50,6 @@ struct GridLayout {
         }
         rowCount = bestLayout.rowCount
         columnCount = bestLayout.columnCount
-    }
-    
-    var itemSize: CGSize {
-        if rowCount == 0 || columnCount == 0 {
-            return CGSize.zero
-        } else {
-            return CGSize(
-                width: size.width / CGFloat(columnCount),
-                height: size.height / CGFloat(rowCount)
-            )
-        }
     }
     
     func location(ofItemAt index: Int) -> CGPoint {
