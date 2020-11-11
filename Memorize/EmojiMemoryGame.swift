@@ -23,6 +23,10 @@ class EmojiMemoryGame: ObservableObject {
         model.choose(card: card)
     }
     
+    func resetGame() {
+        model = EmojiMemoryGame.createMemoryGame()
+    }
+    
     // MARK: - Custom Functions
     
     private static func createMemoryGame() -> MemoryGame<String> {
